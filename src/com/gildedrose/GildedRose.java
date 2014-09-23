@@ -1,9 +1,9 @@
 package com.gildedrose;
 
 class GildedRose {
-    Item[] items; // change this type - to objects that implement my new interface 
+    QualityItem[] items; // change this type - to objects that implement my new interface 
 
-    public GildedRose(Item[] items) {
+    public GildedRose(QualityItem[] items) {
         this.items = items;
     }
 
@@ -15,7 +15,9 @@ class GildedRose {
         	// Extracting methods
         	// Reorganizing methods to represent behaviors for each type 	
         	// Replace conditional with polymorphism
-
+        	// Move methods that perform the updating to the QualityItem superclass:
+        	// they are being used by multiple item classes
+        	
         	if (isBrie(i)) { // Brie
         		 
         		updateBrieSellinAndQuality(i);
@@ -26,24 +28,11 @@ class GildedRose {
         	
         	} else if (!isSulfuras(i)) { // everything else except for Sulfuras
         		
-        		updateGeneralSellinAndQuality(i);
+        		items[i].updateSellinAndQuality();
+        		
         	}
         }
     }
-
-	private void updateGeneralSellinAndQuality(int i) {
-		if (isQualityPositive(i)) {
-			decreaseItemQuality(i);
-		}
-		
-		decreaseSellin(i); // decrement sellIn
-		
-		if (hasSellinDatePassed(i)) {
-			if (isQualityPositive(i)) { // quality is still non-negative
-				decreaseItemQuality(i); // decrement this item's quality
-			}
-		}
-	}
 
 	private void updateBackstagePassSellinAndQuality(int i) {
 		if (isQualityUnder50(i)) { // quality is less than 50 (can never be more than 50)
