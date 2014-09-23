@@ -10,9 +10,10 @@ class GildedRose {
     public void updateQuality() {
         for (int i = 0; i < items.length; i++) {
         	
-        	// Goal: items[0].updateSellinAndQuality();
+        	// Ultimate goal: items[0].updateSellinAndQuality();
+        	// TDD goal: extract methods and organize into types before creating new subtype 
 
-            if (!isBrie(i) && !isBackstagePass(i)) { // filter out brie and filter out Sulfuras
+            if (!isBrie(i) && !isBackstagePass(i)) { // filter out brie and filter out Backstage passes
                 if (isQualityPositive(i)) { // Quality can never be negative
                     if (!isSulfuras(i)) { // filter out Sulfuras
                         decreaseItemQuality(i); // decrement quality
