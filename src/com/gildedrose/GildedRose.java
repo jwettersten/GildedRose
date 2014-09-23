@@ -12,64 +12,76 @@ class GildedRose {
         	
         	// Ultimate goal: items[0].updateSellinAndQuality();
         	// TDD goal: extract methods and organize into types before creating new subtype 
+        	// Extracting methods
+        	// Reorganizing methods to represent behaviors for each type 	
+        	// Replace conditional with polymorphism
 
-        	// Reorganizing methods to represent behaviors for each type
-        	if (!isBrie(i) && !isBackstagePass(i) && !isSulfuras(i)) {
-        		if (isQualityPositive(i)) {
-        			decreaseItemQuality(i);
-        		}
-        		
-        		decreaseSellin(i); // decrement sellIn
-        		
-        		if (hasSellinDatePassed(i)) {
-        			if (isQualityPositive(i)) { // quality is still non-negative
-        				decreaseItemQuality(i); // decrement this item's quality
-        			}
-        		}
-        	}
-        	
-        	// Brie
-        	if (isBrie(i)) {
-        		 if (isQualityUnder50(i)) { // quality is less than 50 (can never be more than 50)
-                     increaseItemQuality(i); // increment quality
-        		 }
+        	if (isBrie(i)) { // Brie
         		 
-        		 decreaseSellin(i); // decrement sellIn
-        		 
-        		 if (hasSellinDatePassed(i)) {
-        			 if (isQualityUnder50(i)) { // quality is never more than 50
-                         increaseItemQuality(i); // increment quality
-                     }
-        		 }
-        	}
+        		updateBrieSellinAndQuality(i);
         	
-        	// Backstage pass
-        	if (isBackstagePass(i)) {
-        		if (isQualityUnder50(i)) { // quality is less than 50 (can never be more than 50)
-                    increaseItemQuality(i); // increment quality
-
-                    if (isSellinWithin10(i)) { // Quality increases by 2 when there are 10 days or less
-                        if (isQualityUnder50(i)) { // quality is less than 50 (can never be more than 50)
-                           increaseItemQuality(i); // increment quality
-                        }
-                    }
-
-                    if (isSellinWithin5(i)) { // Quality increases by 3 when there are 5 days or less
-                        if (isQualityUnder50(i)) { // quality is less than 50 (can never be more than 50)
-                            increaseItemQuality(i); // increment quality
-                        }
-                    }
-
-                }
+        	} else if (isBackstagePass(i)) { // Backstage pass
         		
-        		decreaseSellin(i); // decrement sellIn
+        		updateBackstagePassSellinAndQuality(i);
+        	
+        	} else if (!isSulfuras(i)) { // everything else except for Sulfuras
         		
-        		if (hasSellinDatePassed(i)) { // negative sellin items (quality should degrade twice as fast
-        			decreaseQualityTwice(i); // backstage pass - quality degrades twice as fast after thow show down to zero
-        		}
+        		updateGeneralSellinAndQuality(i);
         	}
         }
     }
+
+	private void updateGeneralSellinAndQuality(int i) {
+		if (isQualityPositive(i)) {
+			decreaseItemQuality(i);
+		}
+		
+		decreaseSellin(i); // decrement sellIn
+		
+		if (hasSellinDatePassed(i)) {
+			if (isQualityPositive(i)) { // quality is still non-negative
+				decreaseItemQuality(i); // decrement this item's quality
+			}
+		}
+	}
+
+	private void updateBackstagePassSellinAndQuality(int i) {
+		if (isQualityUnder50(i)) { // quality is less than 50 (can never be more than 50)
+		    increaseItemQuality(i); // increment quality
+
+		    if (isSellinWithin10(i)) { // Quality increases by 2 when there are 10 days or less
+		        if (isQualityUnder50(i)) { // quality is less than 50 (can never be more than 50)
+		           increaseItemQuality(i); // increment quality
+		        }
+		    }
+
+		    if (isSellinWithin5(i)) { // Quality increases by 3 when there are 5 days or less
+		        if (isQualityUnder50(i)) { // quality is less than 50 (can never be more than 50)
+		            increaseItemQuality(i); // increment quality
+		        }
+		    }
+		}
+		
+		decreaseSellin(i); // decrement sellIn
+		
+		if (hasSellinDatePassed(i)) { // negative sellin items (quality should degrade twice as fast
+			decreaseQualityTwice(i); // backstage pass - quality degrades twice as fast after thow show down to zero
+		}
+	}
+
+	private void updateBrieSellinAndQuality(int i) {
+		if (isQualityUnder50(i)) { // quality is less than 50 (can never be more than 50)
+		     increaseItemQuality(i); // increment quality
+		 }
+		 
+		 decreaseSellin(i); // decrement sellIn
+		 
+		 if (hasSellinDatePassed(i)) {
+			 if (isQualityUnder50(i)) { // quality is never more than 50
+		         increaseItemQuality(i); // increment quality
+		     }
+		 }
+	}
 
 	private int decreaseQualityTwice(int i) {
 		items[i].quality = items[i].quality - items[i].quality;
