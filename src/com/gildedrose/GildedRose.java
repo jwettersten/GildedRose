@@ -13,53 +13,61 @@ class GildedRose {
         	// Ultimate goal: items[0].updateSellinAndQuality();
         	// TDD goal: extract methods and organize into types before creating new subtype 
 
-            if (!isBrie(i) && !isBackstagePass(i)) { // filter out brie and filter out Backstage passes
-                if (isQualityPositive(i)) { // Quality can never be negative
-                    if (!isSulfuras(i)) { // filter out Sulfuras
-                        decreaseItemQuality(i); // decrement quality
-                    }
-                }
-            } else {
-                if (isQualityUnder50(i)) { // quality is less than 50 (can never be more than 50)
+        	// Reorganizing methods to represent behaviors for each type
+        	if (!isBrie(i) && !isBackstagePass(i) && !isSulfuras(i)) {
+        		if (isQualityPositive(i)) {
+        			decreaseItemQuality(i);
+        		}
+        		
+        		decreaseSellin(i); // decrement sellIn
+        		
+        		if (hasSellinDatePassed(i)) {
+        			if (isQualityPositive(i)) { // quality is still non-negative
+        				decreaseItemQuality(i); // decrement this item's quality
+        			}
+        		}
+        	}
+        	
+        	// Brie
+        	if (isBrie(i)) {
+        		 if (isQualityUnder50(i)) { // quality is less than 50 (can never be more than 50)
+                     increaseItemQuality(i); // increment quality
+        		 }
+        		 
+        		 decreaseSellin(i); // decrement sellIn
+        		 
+        		 if (hasSellinDatePassed(i)) {
+        			 if (isQualityUnder50(i)) { // quality is never more than 50
+                         increaseItemQuality(i); // increment quality
+                     }
+        		 }
+        	}
+        	
+        	// Backstage pass
+        	if (isBackstagePass(i)) {
+        		if (isQualityUnder50(i)) { // quality is less than 50 (can never be more than 50)
                     increaseItemQuality(i); // increment quality
 
-                    if (isBackstagePass(i)) { // Backstage passes
-                        if (isSellinWithin10(i)) { // Quality increases by 2 when there are 10 days or less
-                            if (isQualityUnder50(i)) { // quality is less than 50 (can never be more than 50)
-                               increaseItemQuality(i); // increment quality
-                            }
-                        }
-
-                        if (isSellinWithin5(i)) { // Quality increases by 3 when there are 5 days or less
-                            if (isQualityUnder50(i)) { // quality is less than 50 (can never be more than 50)
-                                increaseItemQuality(i); // increment quality
-                            }
+                    if (isSellinWithin10(i)) { // Quality increases by 2 when there are 10 days or less
+                        if (isQualityUnder50(i)) { // quality is less than 50 (can never be more than 50)
+                           increaseItemQuality(i); // increment quality
                         }
                     }
+
+                    if (isSellinWithin5(i)) { // Quality increases by 3 when there are 5 days or less
+                        if (isQualityUnder50(i)) { // quality is less than 50 (can never be more than 50)
+                            increaseItemQuality(i); // increment quality
+                        }
+                    }
+
                 }
-            }
-
-            if (!isSulfuras(i)) { // filter out Sulfuras
-                decreaseSellin(i); // decrement sellIn
-            }
-
-            if (hasSellinDatePassed(i)) { // negative sellin items (quality should degrade twice as fast
-                if (!isBrie(i)) { // filter out brie
-                    if (!isBackstagePass(i)) { // filter out passes
-                        if (isQualityPositive(i)) { // quality is still non-negative
-                            if (!isSulfuras(i)) { // filter out Sulfuras
-                                decreaseItemQuality(i); // decrement this item's quality
-                            }
-                        }
-                    } else { // quality degrades twice as fast at this point
-                        decreaseQualityTwice(i);
-                    }
-                } else { // brie
-                    if (isQualityUnder50(i)) { // quality is never more than 50
-                        increaseItemQuality(i); // increment quality
-                    }
-                }
-            }
+        		
+        		decreaseSellin(i); // decrement sellIn
+        		
+        		if (hasSellinDatePassed(i)) { // negative sellin items (quality should degrade twice as fast
+        			decreaseQualityTwice(i); // backstage pass - quality degrades twice as fast after thow show down to zero
+        		}
+        	}
         }
     }
 
@@ -93,10 +101,6 @@ class GildedRose {
 		return items[i].quality = items[i].quality + 1;
 	}
 
-	private boolean isQualityUnder50(int i) {
-		return items[i].quality < 50;
-	}
-
 	private int decreaseItemQuality(int i) {
 		return items[i].quality = items[i].quality - 1;
 	}
@@ -105,6 +109,10 @@ class GildedRose {
 		return items[i].name.equals("Sulfuras, Hand of Ragnaros");
 	}
 
+	private boolean isQualityUnder50(int i) {
+		return items[i].quality < 50;
+	}
+	
 	private boolean isQualityPositive(int i) {
 		return items[i].quality > 0;
 	}
