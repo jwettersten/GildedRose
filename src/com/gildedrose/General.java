@@ -2,20 +2,20 @@ package com.gildedrose;
 
 public class General extends QualityItem {
 	
-	public General(Item item) {
-		super(item.name, item.sellIn, item.quality);
+	public General(String name, int sellIn, int quality) {
+		super(name, sellIn, quality);
 	}
 
 	public void updateSellinAndQuality() {
 		if (isQualityPositive()) {
-			decreaseItemQuality();
+			decreaseItemQualityBy(1);
 		}
 		
-		decreaseSellin(); // decrement sellIn
+		decreaseSellinBy(1); // decrement sellIn
 		
 		if (hasSellinDatePassed()) {
 			if (isQualityPositive()) { // quality is still non-negative
-				decreaseItemQuality(); // decrement this item's quality
+				decreaseItemQualityBy(2); // decrement this item's quality - Once the sell by date has passed, Quality degrades twice as fast
 			}
 		}
 	}

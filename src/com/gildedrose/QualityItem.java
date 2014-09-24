@@ -8,8 +8,8 @@ public abstract class QualityItem extends Item {
 	
 	public abstract void updateSellinAndQuality();
 	
-	public int decreaseQualityTwice() {
-		this.quality = this.quality - this.quality;
+	protected int decreaseItemQualityBy(int amount) {
+		this.quality = this.quality - amount;
 		
 		if (this.quality < 0) {
 			this.quality = 0;
@@ -18,35 +18,27 @@ public abstract class QualityItem extends Item {
 		return this.quality;
 	}
 
-	public boolean hasSellinDatePassed() {
+	protected boolean hasSellinDatePassed() {
 		return this.sellIn < 0;
 	}
 
-	public int decreaseSellin() {
-		return this.sellIn = this.sellIn - 1;
+	protected int decreaseSellinBy(int amount) {
+		return this.sellIn = this.sellIn - amount;
 	}
 
-	public boolean isSellinWithin5() {
-		return this.sellIn < 6;
+	protected boolean isSellinWithin(int amount) {
+		return this.sellIn <= amount;
 	}
 
-	public boolean isSellinWithin10() {
-		return this.sellIn < 11;
+	protected int increaseItemQualityBy(int amount) {
+		return this.quality = this.quality + amount;
 	}
 
-	public int increaseItemQuality() {
-		return this.quality = this.quality + 1;
-	}
-
-	public int decreaseItemQuality() {
-		return this.quality = this.quality - 1;
-	}
-
-	public boolean isQualityUnder50() {
+	protected boolean isQualityUnder50() {
 		return this.quality < 50;
 	}
 	
-	public boolean isQualityPositive() {
+	protected boolean isQualityPositive() {
 		return this.quality > 0;
 	}
 	

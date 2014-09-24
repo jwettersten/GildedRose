@@ -20,6 +20,7 @@ import org.junit.Test;
  * "Backstage passes", like aged brie, increases in Quality as it's SellIn value approaches; 
  * 	+ Quality increases by 2 when there are 10 days or less and by 3 when there are 5 days or less
  *  + Quality drops to 0 after the concert
+ *  "Conjured" items degrade in Quality twice as fast as normal items
 */
 public class GildedRoseTest {
 
@@ -30,7 +31,7 @@ public class GildedRoseTest {
     @Test
     public void testDecreaseInQualityPerDay() {
 
-    	items = loadTestItems(new General(new Item("+5 Dexterity Vest", 10, 20))); 
+    	items = loadTestItems(new General("+5 Dexterity Vest", 10, 20)); 
         
     	app = new GildedRose(items);
         
@@ -53,7 +54,7 @@ public class GildedRoseTest {
     @Test
     public void testNonNegativeQualityAfterExpirationPerDay() {
     	
-    	items = loadTestItems(new General(new Item("Elixir of the Mongoose", 5, 7))); 
+    	items = loadTestItems(new General("Elixir of the Mongoose", 5, 7)); 
         
     	app = new GildedRose(items);
         
@@ -66,7 +67,7 @@ public class GildedRoseTest {
     @Test
     public void testTwiceAppliedDecreaseInQualityPerDay() {
 
-    	items = loadTestItems(new General(new Item("Elixir of the Mongoose", 0, 2))); 
+    	items = loadTestItems(new General("Elixir of the Mongoose", 0, 2)); 
         
     	app = new GildedRose(items);
         
@@ -75,12 +76,52 @@ public class GildedRoseTest {
         assertEquals(0, app.items[0].quality);
      
     }
+    
+    // "Conjured Mana Cake"
+    @Test
+    public void testCMCDecreaseInQualityPerDay() {
+
+    	items = loadTestItems(new ConjuredManaCake("Conjured Mana Cake", 3, 6)); 
+        
+    	app = new GildedRose(items);
+        
+        updateItemQualityAndSellinPerDay(app, 2);
+        
+        assertEquals(2, app.items[0].quality);
+     
+    }
+    
+    @Test
+    public void testCMCNonNegativeQualityAfterExpirationPerDay() {
+    	
+    	items = loadTestItems(new ConjuredManaCake("Conjured Mana Cake", 3, 6)); 
+        
+    	app = new GildedRose(items);
+        
+        updateItemQualityAndSellinPerDay(app, 10);
+        
+        assertEquals(0, app.items[0].quality);
+     
+    }
+    
+    @Test
+    public void testCMC4TimesDecreaseInQualityPerDay() {
+
+    	items = loadTestItems(new ConjuredManaCake("Conjured Mana Cake", 0, 12)); 
+        
+    	app = new GildedRose(items);
+        
+        updateItemQualityAndSellinPerDay(app, 1);
+        
+        assertEquals(6, app.items[0].quality);
+     
+    }
 	
 	// "Aged Brie"
     @Test
     public void testAgedBrieIncreaseInQualityPerDay() {
 
-    	items = loadTestItems(new Item("Aged Brie", 2, 0)); 
+    	items = loadTestItems(new Brie("Aged Brie", 2, 0)); 
         
     	app = new GildedRose(items);
         
@@ -92,7 +133,7 @@ public class GildedRoseTest {
     @Test
     public void testAgedBrieTwiceAppliedIncreaseInQualityPerDay() {
 
-    	items = loadTestItems(new Item("Aged Brie", 0, 2)); 
+    	items = loadTestItems(new Brie("Aged Brie", 0, 2)); 
     	
     	app = new GildedRose(items);
         
@@ -104,7 +145,7 @@ public class GildedRoseTest {
     @Test
     public void testAgedBrieMaxQuality() {
 
-    	items = loadTestItems(new Item("Aged Brie", 2, 10)); 
+    	items = loadTestItems(new Brie("Aged Brie", 2, 10)); 
         
     	app = new GildedRose(items);
         
@@ -117,7 +158,7 @@ public class GildedRoseTest {
     @Test
     public void testBackstagePassIncreaseInQualityPerDay() {
 
-    	items = loadTestItems(new Item("Backstage passes to a TAFKAL80ETC concert", 15, 20)); 
+    	items = loadTestItems(new BackstagePass("Backstage passes to a TAFKAL80ETC concert", 15, 20)); 
     	
     	app = new GildedRose(items);
         
@@ -129,7 +170,7 @@ public class GildedRoseTest {
     @Test
     public void testBackstagePassIncreaseInQualityWithin10DaysOfShow() {
 
-    	items = loadTestItems(new Item("Backstage passes to a TAFKAL80ETC concert", 10, 20)); 
+    	items = loadTestItems(new BackstagePass("Backstage passes to a TAFKAL80ETC concert", 10, 20)); 
     	
     	app = new GildedRose(items);
         
@@ -141,7 +182,7 @@ public class GildedRoseTest {
     @Test
     public void testBackstagePassIncreaseInQualityWithin5DaysOfShow() {
 
-    	items = loadTestItems(new Item("Backstage passes to a TAFKAL80ETC concert", 5, 20)); 
+    	items = loadTestItems(new BackstagePass("Backstage passes to a TAFKAL80ETC concert", 5, 20)); 
     	
     	app = new GildedRose(items);
         
@@ -153,7 +194,7 @@ public class GildedRoseTest {
     @Test
     public void testBackstagePassQualityAfterShow() {
 
-    	items = loadTestItems(new Item("Backstage passes to a TAFKAL80ETC concert", 0, 20)); 
+    	items = loadTestItems(new BackstagePass("Backstage passes to a TAFKAL80ETC concert", 0, 20)); 
     	
     	app = new GildedRose(items);
         
@@ -166,7 +207,7 @@ public class GildedRoseTest {
     @Test
     public void testSulfurasNoChangeInQualityPerDay() {
 
-    	items = loadTestItems(new Item("Sulfuras, Hand of Ragnaros", 0, 80)); 
+    	items = loadTestItems(new Sulfuras("Sulfuras, Hand of Ragnaros", 0, 80)); 
         
     	app = new GildedRose(items);
         
@@ -178,7 +219,7 @@ public class GildedRoseTest {
     @Test
     public void testSulfurasNoChangeInSellinPerDay() {
 
-    	items = loadTestItems(new Item("Sulfuras, Hand of Ragnaros", 0, 80));
+    	items = loadTestItems(new Sulfuras("Sulfuras, Hand of Ragnaros", 0, 80));
         
     	app = new GildedRose(items);
         
